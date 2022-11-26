@@ -1,1 +1,1 @@
-# RandomChat-Version2
+# RandomChat
