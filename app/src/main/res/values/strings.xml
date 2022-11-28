@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Random Chat</string>
+    <string name="messagePlaceHolder">Send a message</string>
+    <string name="messageSend">보내기</string>
+    <string name="unKnownError">"알 수 없는 오류가 발생했습니다. 잠시후 다시 시도해주시길 바랍니다.</string>
+    <string name="confirm">확인</string>
+    <string name="dismiss">취소</string>
+    <string name="exitRoom">채팅방을 나가시겠습니까?</string>
+</resources>
