@@ -18,7 +18,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
-    private const val BASE_URL = "http://192.168.123.104:3004/"
+    private const val BASE_URL = "http://개인ip:3004/"
     private val gson: Gson = GsonBuilder()
         .setLenient()
         .create()
