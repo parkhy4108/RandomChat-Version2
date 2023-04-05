@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 object SocketController {
     lateinit var nickName: String
     private const val uriDevice = "http://10.0.2.2:3004"
-    private const val uriHome = "http://192.168.123.104:3004"
+    private const val uriHome = "http://개인IP주소:3004"
 
     val mSocket: Socket = IO.socket(uriHome)
 
