@@ -14,44 +14,45 @@ class QueryImages @Inject constructor(
 )  {
     private val _context = context
     private val _contentResolver = _context.contentResolver
-    suspend fun queryImages(): List<MediaStoreImage> {
+
+    suspend fun getGalleryImages(): List<MediaStoreImage> {
+
         val images = mutableListOf<MediaStoreImage>()
+        val projection = arrayOf(
+            MediaStore.Images.Media._ID,
+            MediaStore.Images.Media.DISPLAY_NAME,
+            MediaStore.Images.Media.DATE_TAKEN,
+            MediaStore.Images.Media.DATA
+        )
+        val sortOrder = "${MediaStore.Images.Media.DATE_TAKEN} DESC"
 
-        withContext(Dispatchers.IO) {
-            val projection = arrayOf(
-                MediaStore.Images.Media._ID,
-                MediaStore.Images.Media.DISPLAY_NAME,
-                MediaStore.Images.Media.DATE_TAKEN,
-                MediaStore.Images.Media.DATA
-            )
+        val query = _contentResolver.query(
+            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+            projection,
+            null,
+            null,
+            sortOrder
+        )
 
-            val sortOrder = "${MediaStore.Images.Media.DATE_TAKEN} DESC"
-            _contentResolver.query(
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                projection,
-                null,
-                null,
-                sortOrder
-            )?.use { cursor ->
-                val idColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID)
-                val dateTakenColumn =
-                    cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATE_TAKEN)
-                val displayNameColumn =
-                    cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME)
-                val dataColumn =
-                    cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
-                while (cursor.moveToNext()) {
-                    val id = cursor.getLong(idColumn)
-                    val dateTaken = Date(cursor.getLong(dateTakenColumn))
-                    val displayName = cursor.getString(displayNameColumn)
-                    val contentUri = Uri.withAppendedPath(
-                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                        id.toString()
-                    )
-                    val path = cursor.getString(dataColumn)
-                    val image = MediaStoreImage(id, displayName, dateTaken, contentUri, path)
-                    images += image
-                }
+        query?.use { cursor ->
+            val idColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID)
+            val dateTakenColumn =
+                cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATE_TAKEN)
+            val displayNameColumn =
+                cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME)
+            val dataColumn =
+                cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+            while (cursor.moveToNext()) {
+                val id = cursor.getLong(idColumn)
+                val dateTaken = Date(cursor.getLong(dateTakenColumn))
+                val displayName = cursor.getString(displayNameColumn)
+                val contentUri = Uri.withAppendedPath(
+                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                    id.toString()
+                )
+                val path = cursor.getString(dataColumn)
+                val image = MediaStoreImage(id, displayName, dateTaken, contentUri, path)
+                images += image
             }
         }
 
