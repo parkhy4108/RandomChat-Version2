@@ -12,7 +12,7 @@ class TaskService : Service() {
     }
 
     override fun onTaskRemoved(rootIntent: Intent?) {
-        super.onTaskRemoved(rootIntent)
         SocketController.disconnect()
+        stopSelf()
     }
 }
